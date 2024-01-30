@@ -23,6 +23,11 @@ class Play extends Phaser.Scene {
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0, 0)
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0, 0)
 
+
+        this.physics.add.collider(this.ship01, this.p1Rocket, this.explodeCallback, null, this)
+        this.physics.add.collider(this.ship02, this.p1Rocket, this.explodeCallback, null, this)
+        this.physics.add.collider(this.ship03, this.p1Rocket, this.explodeCallback, null, this)
+        
         // define keys
         keyFIRE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
         keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
@@ -75,20 +80,6 @@ class Play extends Phaser.Scene {
             this.ship02.update()
             this.ship03.update()
         }
-
-        // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship03)
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship02)
-        }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset()
-            this.shipExplode(this.ship01)
-        }
     }
 
     checkCollision(rocket, ship) {
@@ -101,6 +92,11 @@ class Play extends Phaser.Scene {
         } else {
             return false
         }
+    }
+
+    explodeCallback(ship, player) {
+        player.reset()
+        this.shipExplode(ship)
     }
 
     shipExplode(ship) {
